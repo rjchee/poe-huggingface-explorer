@@ -6,13 +6,11 @@
 from fastapi_poe import make_app
 from modal import Image, Stub, asgi_app
 
-from battlebot import BattleBot
-from catbot import CatBot
-from chatgpt_allcapsbot import ChatGPTAllCapsBot
-from echobot import EchoBot
+from hfbot import HFBot
+import os
 
-# Echo bot is a very simple bot that just echoes back the user's last message.
-bot = EchoBot()
+
+bot = HFBot(os.environ["HUGGINGFACE_API_KEY"])
 
 # A sample bot that showcases the capabilities the protocol provides. Please see the
 # following link for the full set of available message commands:
