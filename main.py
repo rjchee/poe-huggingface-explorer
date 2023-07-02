@@ -7,7 +7,10 @@ from fastapi_poe import make_app
 from modal import Image, Stub, asgi_app
 
 from hfbot import HFBot
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 
 bot = HFBot(os.environ["HUGGINGFACE_API_KEY"])
@@ -33,8 +36,12 @@ bot = HFBot(os.environ["HUGGINGFACE_API_KEY"])
 # app = make_app(bot, api_key=POE_API_KEY)
 
 # specific to hosting with modal.com
-image = Image.debian_slim().pip_install_from_requirements("requirements.txt")
-stub = Stub("poe-bot-quickstart")
+image = Image.debian_slim().pip_install_from_requirements(
+    "requirements.txt"
+).env(
+    {"HUGGINGFACE_API_KEY": os.environ["HUGGINGFACE_API_KEY"]}
+)
+stub = Stub("poe-huggingface-explorer")
 
 
 @stub.function(image=image)
