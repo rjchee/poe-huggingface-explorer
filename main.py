@@ -39,7 +39,10 @@ bot = HFBot(os.environ["HUGGINGFACE_API_KEY"])
 image = Image.debian_slim().pip_install_from_requirements(
     "requirements.txt"
 ).env(
-    {"HUGGINGFACE_API_KEY": os.environ["HUGGINGFACE_API_KEY"]}
+    {
+        "HUGGINGFACE_API_KEY": os.environ["HUGGINGFACE_API_KEY"],
+        "POE_API_KEY": os.environ["POE_API_KEY"],
+    }
 )
 stub = Stub("poe-huggingface-explorer")
 
@@ -47,5 +50,5 @@ stub = Stub("poe-huggingface-explorer")
 @stub.function(image=image)
 @asgi_app()
 def fastapi_app():
-    app = make_app(bot, allow_without_key=True)
+    app = make_app(bot, api_key=os.environ["POE_API_KEY"])
     return app
