@@ -14,7 +14,11 @@ from typing import AsyncIterable
 
 import aiohttp
 from fastapi_poe import PoeBot, run
-from fastapi_poe.types import QueryRequest
+from fastapi_poe.types import (
+    QueryRequest,
+    SettingsRequest,
+    SettingsResponse,
+)
 from sse_starlette.sse import ServerSentEvent
 
 
@@ -97,7 +101,7 @@ class HFBot(PoeBot):
             if message.role == "user" and (args := parse_bot_args(message.content)) != None:
                 conversation_start_index = i + 2
                 break
-        
+
         if conversation_start_index is None:
             yield self.text_event(help_message)
             yield self.suggested_reply_event("microsoft/DialoGPT-large")
@@ -109,7 +113,7 @@ class HFBot(PoeBot):
             else:
                 yield self.text_event(f"Error calling the model with these arguments: `{response_data}`")
             return
-        
+
         user_messages = []
         bot_messages = []
         for message in query.query[conversation_start_index:]:
@@ -127,6 +131,15 @@ class HFBot(PoeBot):
             yield self.text_event(f"Error calling the model: `{response_data}`")
             return
         yield self.text_event(response_data["generated_text"])
+
+    async def get_settings(self, setting: SettingsRequest) -> SettingsResponse:
+        return SettingsResponse(
+            introduction_message=(
+                "Hi, I am the HuggingFaceExplorer. Please provide me the name "
+                "of a model on HuggingFace with Hosted Inference API support "
+                "get started. For example, microsoft/DialoGPT-large"
+            ),
+        )
 
 
 if __name__ == "__main__":
