@@ -133,13 +133,16 @@ class HFBot(PoeBot):
         yield self.text_event(response_data["generated_text"])
 
     async def get_settings(self, setting: SettingsRequest) -> SettingsResponse:
-        return SettingsResponse(
+        print(f"got settings request: {setting}")
+        resp = SettingsResponse(
             introduction_message=(
                 "Hi, I am the HuggingFaceExplorer. Please provide me the name "
                 "of a model on HuggingFace with Hosted Inference API support "
                 "get started. For example, microsoft/DialoGPT-large"
             ),
         )
+        print(f"responding with {resp.dict()}")
+        return resp
 
 
 if __name__ == "__main__":
