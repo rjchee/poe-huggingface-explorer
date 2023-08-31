@@ -144,6 +144,10 @@ class HFBot(PoeBot):
         print(f"responding with {resp.dict()}")
         return resp
 
+    async def on_error(self, error_request: ReportErrorRequest) -> None:
+        print(f"received error from server: {error_request}")
+        super().on_error()
+
 
 if __name__ == "__main__":
     hf_key = os.environ["HUGGINGFACE_API_KEY"]
